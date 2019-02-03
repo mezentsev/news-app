@@ -5,6 +5,8 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -26,10 +28,11 @@ class SourcesFragment : BaseFragment<SourcesContract.Presenter>(), SourcesContra
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         presenter.attach(this)
-        sourcesAdapter = SourcesAdapter()
 
         val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         val view = inflater.inflate(R.layout.fragment_list, container, false)
+
+        sourcesAdapter = SourcesAdapter()
         view.list.apply {
             adapter = sourcesAdapter
             if (isLandscape) {
@@ -39,20 +42,36 @@ class SourcesFragment : BaseFragment<SourcesContract.Presenter>(), SourcesContra
                 layoutManager = LinearLayoutManager(context)
             }
             addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
-
-            isClickable = true
         }
 
         return view
     }
 
     override fun showSources(sources: List<Source>) {
+        hideProgress()
         sourcesAdapter.setSources(sources)
     }
 
+    override fun showProgress() {
+        view?.let {
+            it.progress_view.visibility = VISIBLE
+        }
+    }
+
+    private fun hideProgress() {
+        view?.let {
+            it.progress_view.visibility = GONE
+        }
+    }
+
     override fun showError() {
-        val root = view ?: return
-        Snackbar.make(root, R.string.error_loading_sources, Snackbar.LENGTH_SHORT).show()
+        hideProgress()
+        view?.let {
+            Snackbar
+                    .make(it, R.string.error_loading_sources, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.error_loading_reload_action) { presenter.load() }
+                    .show()
+        }
     }
 
     override fun showArticlesUI(category: String?, language: String?, country: String?) {

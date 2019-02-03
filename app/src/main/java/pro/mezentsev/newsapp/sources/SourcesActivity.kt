@@ -2,10 +2,10 @@ package pro.mezentsev.newsapp.sources
 
 import android.os.Bundle
 import pro.mezentsev.newsapp.R
+import pro.mezentsev.newsapp.data.NewsRepositoryImpl
 import pro.mezentsev.newsapp.ui.BaseActivity
 
 class SourcesActivity : BaseActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_with_toolbar)
@@ -20,15 +20,15 @@ class SourcesActivity : BaseActivity() {
                     replaceFragment(frameId, this)
                 }
 
-        // Create the presenter
-        //SourcesPresenter().apply {
-            // Load previously saved state, if available.
-            /**if (savedInstanceState != null) {
-            currentFiltering = savedInstanceState.getSerializable(CURRENT_FILTERING_KEY)
-            as TasksFilterType
-            }*/
-        //}
+        //todo inject
+        sourcesFragment.presenter = SourcesPresenter(NewsRepositoryImpl())
 
-        sourcesFragment.presenter = SourcesPresenter()
+        //val loadedSources = savedInstanceState?.getSerializable(LOADED_SOURCES_COUNT) as Int? ?: 0
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState.apply {
+            //putInt(LOADED_SOURCES_COUNT, presenter.getLoadedSources())
+        })
     }
 }

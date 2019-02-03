@@ -7,6 +7,7 @@ import pro.mezentsev.newsapp.ui.Contract
 interface ArticlesContract {
     interface View : Contract.BaseView {
         fun showArticles(articles: List<Article>, from: Int)
+        fun showProgress()
         fun showError()
     }
 

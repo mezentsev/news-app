@@ -7,7 +7,7 @@ import io.reactivex.schedulers.Schedulers
 import pro.mezentsev.newsapp.data.NewsRepository
 import pro.mezentsev.newsapp.model.Article
 
-class ArticlesPresenter : ArticlesContract.Presenter() {
+class ArticlesPresenter constructor(private val newsRepository: NewsRepository) : ArticlesContract.Presenter() {
     private val subscriptions = CompositeDisposable()
 
     private var category: String? = null
@@ -15,9 +15,11 @@ class ArticlesPresenter : ArticlesContract.Presenter() {
     private var country: String? = null
 
     override fun load(count: Int, from: Int) {
+        view?.showProgress()
+
         subscriptions.clear()
 
-        val subscribe = NewsRepository.loadArticles(count, from, category, language, country)
+        val subscribe = newsRepository.loadArticles(count, from, category, language, country)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ articles: List<Article> ->

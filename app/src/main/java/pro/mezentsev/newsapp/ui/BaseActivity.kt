@@ -19,4 +19,9 @@ abstract class BaseActivity : AppCompatActivity() {
                 .replace(frameId, fragment)
                 .commit()
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 }

@@ -7,14 +7,15 @@ import io.reactivex.schedulers.Schedulers
 import pro.mezentsev.newsapp.data.NewsRepository
 import pro.mezentsev.newsapp.model.Source
 
-class SourcesPresenter : SourcesContract.Presenter() {
-
+class SourcesPresenter constructor(private val newsRepository: NewsRepository): SourcesContract.Presenter() {
     private val subscriptions = CompositeDisposable()
 
     override fun load() {
+        view?.showProgress()
+
         subscriptions.clear()
 
-        val subscribe = NewsRepository.loadSources()
+        val subscribe = newsRepository.loadSources()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ sources: List<Source> ->

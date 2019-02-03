@@ -47,10 +47,24 @@ class ArticlesFragment : BaseFragment<ArticlesContract.Presenter>(), ArticlesCon
     }
 
     override fun showArticles(articles: List<Article>, from: Int) {
+        hideProgress()
         articlesAdapter.setArticles(articles)
     }
 
+    override fun showProgress() {
+        view?.let {
+            it.progress_view.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideProgress() {
+        view?.let {
+            it.progress_view.visibility = View.GONE
+        }
+    }
+
     override fun showError() {
+        hideProgress()
         val root = view ?: return
         Snackbar.make(root, R.string.error_loading_articles, Snackbar.LENGTH_SHORT).show()
     }

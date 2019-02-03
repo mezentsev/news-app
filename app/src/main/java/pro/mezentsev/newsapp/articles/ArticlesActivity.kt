@@ -2,10 +2,10 @@ package pro.mezentsev.newsapp.articles
 
 import android.os.Bundle
 import pro.mezentsev.newsapp.R
+import pro.mezentsev.newsapp.data.NewsRepositoryImpl
 import pro.mezentsev.newsapp.ui.BaseActivity
 
 class ArticlesActivity : BaseActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_with_toolbar)
@@ -26,23 +26,10 @@ class ArticlesActivity : BaseActivity() {
                             replaceFragment(frameId, this)
                         }
 
-        // Create the presenter
-        //SourcesPresenter().apply {
-        // Load previously saved state, if available.
-        /**if (savedInstanceState != null) {
-        currentFiltering = savedInstanceState.getSerializable(CURRENT_FILTERING_KEY)
-        as TasksFilterType
-        }*/
-        //}
-
-        articlesFragment.presenter = ArticlesPresenter().apply {
+        //todo inject
+        articlesFragment.presenter = ArticlesPresenter(NewsRepositoryImpl()).apply {
             setArticleParameters(extraCategory,extraLanguage, extraCountry)
         }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return true
     }
 
     companion object {

@@ -7,6 +7,7 @@ interface SourcesContract {
     interface View : Contract.BaseView {
         fun showSources(sources: List<Source>)
         fun showError()
+        fun showProgress()
         fun showArticlesUI(category: String?, language: String?, country: String?)
     }
 
