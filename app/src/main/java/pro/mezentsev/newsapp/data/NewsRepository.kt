@@ -7,10 +7,8 @@ import pro.mezentsev.newsapp.model.Source
 
 interface NewsRepository {
     fun loadArticles(@IntRange(from = 0) count: Int,
-                     from: Int = 0,
-                     category: String? = null,
-                     language: String? = null,
-                     country: String? = null): Single<List<Article>>
+                     from: Int,
+                     sourceId: String): Single<List<Article>>
 
     fun loadSources(): Single<List<Source>>
 }

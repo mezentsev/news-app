@@ -22,6 +22,7 @@ import pro.mezentsev.newsapp.sources.adapter.SourcesAdapter
 import pro.mezentsev.newsapp.ui.BaseFragment
 
 class SourcesFragment : BaseFragment<SourcesContract.Presenter>(), SourcesContract.View {
+
     private lateinit var sourcesAdapter: SourcesAdapter
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -44,7 +45,18 @@ class SourcesFragment : BaseFragment<SourcesContract.Presenter>(), SourcesContra
             addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
         }
 
+        sourcesAdapter.setSourceClickListener(object: SourceClickListener {
+            override fun onSourceObtained(source: Source) {
+                presenter.onSourceObtained(source)
+            }
+        })
+
         return view
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.load()
     }
 
     override fun showSources(sources: List<Source>) {
@@ -74,25 +86,11 @@ class SourcesFragment : BaseFragment<SourcesContract.Presenter>(), SourcesContra
         }
     }
 
-    override fun showArticlesUI(category: String?, language: String?, country: String?) {
+    override fun showArticlesUI(sourceId: String) {
         val intent = Intent(context, ArticlesActivity::class.java).apply {
-            putExtra(ArticlesActivity.EXTRA_CATEGORY_ARTICLE, category)
-            putExtra(ArticlesActivity.EXTRA_LANGUAGE_ARTICLE, language)
-            putExtra(ArticlesActivity.EXTRA_COUNTRY_ARTICLE, country)
+            putExtra(ArticlesActivity.EXTRA_SOURCE_ID, sourceId)
         }
         startActivity(intent)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        sourcesAdapter.setSourceClickListener(object: SourceClickListener {
-            override fun onSourceObtained(source: Source) {
-                presenter.onSourceObtained(source)
-            }
-        })
-
-        presenter.load()
     }
 
     override fun onDestroyView() {

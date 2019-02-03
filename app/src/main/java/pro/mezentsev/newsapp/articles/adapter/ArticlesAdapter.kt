@@ -32,13 +32,13 @@ class ArticlesAdapter constructor(private val context: Context) : RecyclerView.A
 
     override fun onBindViewHolder(holder: ArticleHolder, position: Int) {
         holder.bind(articles[position])
+
         Glide.with(context)
                 .load(articles[position].urlToImage)
                 .apply(RequestOptions()
                         .override(300))
                 .into(holder.thumbnailImageView)
     }
-
 
 
     inner class ArticleHolder constructor(view: View) : RecyclerView.ViewHolder(view) {

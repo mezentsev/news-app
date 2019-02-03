@@ -8,7 +8,7 @@ interface SourcesContract {
         fun showSources(sources: List<Source>)
         fun showError()
         fun showProgress()
-        fun showArticlesUI(category: String?, language: String?, country: String?)
+        fun showArticlesUI(sourceId: String)
     }
 
     abstract class Presenter : Contract.BasePresenter<View>() {

@@ -11,6 +11,7 @@ class SourcesPresenter constructor(private val newsRepository: NewsRepository): 
     private val subscriptions = CompositeDisposable()
 
     override fun load() {
+        Log.d(TAG, "Start loading")
         view?.showProgress()
 
         subscriptions.clear()
@@ -21,7 +22,7 @@ class SourcesPresenter constructor(private val newsRepository: NewsRepository): 
                 .subscribe({ sources: List<Source> ->
                     view?.showSources(sources)
                 }, { error ->
-                    Log.e(TAG, "Can't get source list", error)
+                    Log.e(TAG, "Can't get sources", error)
                     view?.showError()
                 })
 
@@ -29,7 +30,7 @@ class SourcesPresenter constructor(private val newsRepository: NewsRepository): 
     }
 
     override fun onSourceObtained(source: Source) {
-        view?.showArticlesUI(source.category, source.language, source.country)
+        view?.showArticlesUI(source.id)
                 ?: Log.d(TAG, "No attached view to process $source")
     }
 
@@ -39,6 +40,6 @@ class SourcesPresenter constructor(private val newsRepository: NewsRepository): 
     }
 
     companion object {
-        const val TAG = "SourcesPresenter"
+        private const val TAG = "SourcesPresenter"
     }
 }

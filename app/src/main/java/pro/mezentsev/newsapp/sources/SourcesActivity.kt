@@ -21,14 +21,6 @@ class SourcesActivity : BaseActivity() {
                 }
 
         //todo inject
-        sourcesFragment.presenter = SourcesPresenter(NewsRepositoryImpl())
-
-        //val loadedSources = savedInstanceState?.getSerializable(LOADED_SOURCES_COUNT) as Int? ?: 0
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState.apply {
-            //putInt(LOADED_SOURCES_COUNT, presenter.getLoadedSources())
-        })
+        sourcesFragment.presenter = SourcesPresenter(NewsRepositoryImpl(this))
     }
 }

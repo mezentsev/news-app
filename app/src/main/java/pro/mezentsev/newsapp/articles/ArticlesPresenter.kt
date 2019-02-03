@@ -10,32 +10,27 @@ import pro.mezentsev.newsapp.model.Article
 class ArticlesPresenter constructor(private val newsRepository: NewsRepository) : ArticlesContract.Presenter() {
     private val subscriptions = CompositeDisposable()
 
-    private var category: String? = null
-    private var language: String? = null
-    private var country: String? = null
-
-    override fun load(count: Int, from: Int) {
+    override fun load(count: Int, from: Int, sourceId: String) {
         view?.showProgress()
 
         subscriptions.clear()
 
-        val subscribe = newsRepository.loadArticles(count, from, category, language, country)
+        val subscribe = newsRepository.loadArticles(count, from, sourceId)
+                .map {
+                    it.filter { article ->
+                        article.title.isNotEmpty()
+                    }
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ articles: List<Article> ->
                     view?.showArticles(articles, from)
-                }, { error ->
-                    Log.e(TAG, "Can't get news list", error)
+                }, { ex ->
+                    Log.e(TAG, "Can't get articles", ex)
                     view?.showError()
                 })
 
         subscriptions.add(subscribe)
-    }
-
-    override fun setArticleParameters(category: String?, language: String?, country: String?) {
-        this.category = category
-        this.language = language
-        this.country = country
     }
 
     override fun detach() {

@@ -15,26 +15,20 @@ class ArticlesActivity : BaseActivity() {
             setTitle(R.string.articles_activity_title)
         }
 
-        val extraCategory: String? = intent.getStringExtra(EXTRA_CATEGORY_ARTICLE)
-        val extraLanguage: String? = intent.getStringExtra(EXTRA_LANGUAGE_ARTICLE)
-        val extraCountry: String? = intent.getStringExtra(EXTRA_COUNTRY_ARTICLE)
+        val sourceId: String? = intent.getStringExtra(EXTRA_SOURCE_ID)
 
         val frameId = R.id.frame
         val articlesFragment = supportFragmentManager.findFragmentById(frameId) as ArticlesFragment?
-                ?: ArticlesFragment.newInstance(extraCategory, extraLanguage, extraCountry)
+                ?: ArticlesFragment.newInstance(sourceId)
                         .apply {
                             replaceFragment(frameId, this)
                         }
 
         //todo inject
-        articlesFragment.presenter = ArticlesPresenter(NewsRepositoryImpl()).apply {
-            setArticleParameters(extraCategory,extraLanguage, extraCountry)
-        }
+        articlesFragment.presenter = ArticlesPresenter(NewsRepositoryImpl(this))
     }
 
     companion object {
-        const val EXTRA_CATEGORY_ARTICLE = "CATEGORY_ARTICLE"
-        const val EXTRA_LANGUAGE_ARTICLE = "LANGUAGE_ARTICLE"
-        const val EXTRA_COUNTRY_ARTICLE = "COUNTRY_ARTICLE"
+        const val EXTRA_SOURCE_ID = "SOURCE_ID"
     }
 }

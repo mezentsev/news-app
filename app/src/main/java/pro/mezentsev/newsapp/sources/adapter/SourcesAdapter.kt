@@ -62,7 +62,6 @@ class SourcesAdapter : RecyclerView.Adapter<SourcesAdapter.SourceHolder>(), OnSo
             titleTextView?.text = source.name
             descriptionTextView?.text = source.description
             urlView?.text = source.url
-            println(source.url)
         }
     }
 

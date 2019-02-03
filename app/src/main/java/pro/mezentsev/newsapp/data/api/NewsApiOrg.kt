@@ -13,11 +13,9 @@ import retrofit2.http.Query
 interface NewsApiOrg {
 
     @GET("top-headlines")
-    fun getArticles(@Query("pageSize") count: Int = 20,
+    fun getArticles(@Query("pageSize") count: Int = 30,
                     @Query("page") from: Int = 0,
-                    @Query("category") category: String = "general",
-                    @Query("language") language: String? = null,
-                    @Query("country") country: String? = null): Single<ArticlesResponse>
+                    @Query("sources") sourceId: String): Single<ArticlesResponse>
 
     @GET("sources")
     fun getSources(@Query("category") category: String? = null,

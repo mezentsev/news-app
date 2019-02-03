@@ -4,6 +4,8 @@
     <string name="sources_activity_title">Sources</string>
 
     <string name="error_loading_articles">Problem with loading articles</string>
+    <string name="error_no_articles_found">No articles found</string>
+    <string name="error_no_articles_found_back_text">Go back?</string>
     <string name="error_loading_sources">Problem with loading sources</string>
     <string name="error_loading_reload_action">Try again?</string>
 
