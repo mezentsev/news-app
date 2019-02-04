@@ -46,7 +46,7 @@ class ArticlesFragment : BaseFragment<ArticlesContract.Presenter>(), ArticlesCon
         savedInstanceState?.let {
             val list = it.getParcelableArrayList<Article>(BUNDLE_ARRAY_KEY)
             if (!list.isNullOrEmpty()) {
-                showArticles(list, 0)
+                showArticles(list)
                 forceLoad = false
             }
         }
@@ -59,7 +59,7 @@ class ArticlesFragment : BaseFragment<ArticlesContract.Presenter>(), ArticlesCon
         load(forceLoad)
     }
 
-    override fun showArticles(articles: List<Article>, from: Int) {
+    override fun showArticles(articles: List<Article>) {
         hideProgress()
         articlesAdapter.setArticles(articles)
 

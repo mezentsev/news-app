@@ -6,7 +6,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-
+/**
+ * Provides model for [article](https://newsapi.org/docs/endpoints/sources).
+ */
 @Entity(tableName = "article")
 data class Article(@ColumnInfo(name = "source") val source: Source,
                    @ColumnInfo(name = "author") val author: String?,

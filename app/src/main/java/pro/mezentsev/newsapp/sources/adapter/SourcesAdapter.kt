@@ -9,7 +9,6 @@ import kotlinx.android.synthetic.main.source_view.view.*
 import pro.mezentsev.newsapp.R
 import pro.mezentsev.newsapp.model.Source
 
-
 class SourcesAdapter : RecyclerView.Adapter<SourcesAdapter.SourceHolder>(), OnSourceHolderClicked {
     private var sourceClickListener: SourceClickListener? = null
     private var sources: List<Source>? = null

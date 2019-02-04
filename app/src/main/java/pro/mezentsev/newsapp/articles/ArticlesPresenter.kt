@@ -10,7 +10,7 @@ import pro.mezentsev.newsapp.model.Article
 class ArticlesPresenter constructor(private val newsRepository: NewsRepository) : ArticlesContract.Presenter() {
     private val subscriptions = CompositeDisposable()
 
-    override fun load(count: Int, from: Int, sourceId: String, force: Boolean) {
+    override fun load(count: Int, sourceId: String, force: Boolean) {
         subscriptions.clear()
 
         if (!force) {
@@ -19,7 +19,7 @@ class ArticlesPresenter constructor(private val newsRepository: NewsRepository) 
 
         view?.showProgress()
 
-        val subscribe = newsRepository.loadArticles(count, from, sourceId)
+        val subscribe = newsRepository.loadArticles(sourceId, count)
                 .map {
                     it.filter { article ->
                         article.title.isNotEmpty()
@@ -28,7 +28,7 @@ class ArticlesPresenter constructor(private val newsRepository: NewsRepository) 
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ articles: List<Article> ->
-                    view?.showArticles(articles, from)
+                    view?.showArticles(articles)
                 }, { ex ->
                     Log.e(TAG, "Can't get articles", ex)
                     view?.showError()

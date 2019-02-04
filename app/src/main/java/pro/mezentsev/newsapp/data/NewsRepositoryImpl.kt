@@ -19,7 +19,7 @@ class NewsRepositoryImpl constructor(private val newsApi: NewsApi,
                 .toObservable()
                 .flatMapIterable { it.sources }
                 .toList()
-                .doAfterSuccess { newsDao.insertAllSources(it) }
+                .doAfterSuccess { newsDao.insertSources(it) }
                 .onErrorResumeNext { ex ->
                     Log.d(TAG, "Problem with api. Trying to load from dao", ex)
                     newsDao.getSources()
@@ -28,21 +28,21 @@ class NewsRepositoryImpl constructor(private val newsApi: NewsApi,
                 }
     }
 
-    override fun loadArticles(@IntRange(from = 0) count: Int,
-                              from: Int,
-                              sourceId: String): Single<List<Article>> {
-        return newsApi.getArticles(count, from, sourceId)
+    override fun loadArticles(sourceId: String,
+                              @IntRange(from = 0) count: Int,
+                              @IntRange(from = 0) page: Int): Single<List<Article>> {
+        return newsApi.getArticles(sourceId, count, page)
                 .timeout(3, TimeUnit.SECONDS)
                 .toObservable()
                 .flatMapIterable { it.articles }
                 .toList()
                 .doAfterSuccess {
-                    newsDao.removeAllArticles(it[0].source)
-                    newsDao.insertAllArticles(it)
+                    newsDao.removeArticles(it[0].source)
+                    newsDao.insertArticles(it)
                 }
                 .onErrorResumeNext { ex ->
                     Log.d(TAG, "Problem with api. Trying to load from dao", ex)
-                    newsDao.getArticles(count, from, SourceConverter.toSource(sourceId))
+                    newsDao.getArticles(SourceConverter.toSource(sourceId), count, page )
                             .filter { !it.isEmpty() }
                             .toSingle()
                 }

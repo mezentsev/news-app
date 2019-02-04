@@ -7,6 +7,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 
+/**
+ * Provides model for [source](https://newsapi.org/docs/endpoints/sources).
+ */
 @Entity(tableName = "source")
 data class Source(@PrimaryKey @ColumnInfo(name = "id") val id: String,
                   @ColumnInfo(name = "name") val name: String,
