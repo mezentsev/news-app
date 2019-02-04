@@ -5,9 +5,9 @@ import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import pro.mezentsev.newsapp.NewsApp
 import pro.mezentsev.newsapp.di.module.*
-import javax.inject.Singleton
+import pro.mezentsev.newsapp.di.scope.ApplicationScope
 
-@Singleton
+@ApplicationScope
 @Component(modules = [
     AndroidSupportInjectionModule::class,
     AppModule::class,

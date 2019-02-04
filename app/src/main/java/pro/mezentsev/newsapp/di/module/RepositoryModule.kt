@@ -9,11 +9,13 @@ import pro.mezentsev.newsapp.data.NewsRepositoryImpl
 import pro.mezentsev.newsapp.data.api.NewsApi
 import pro.mezentsev.newsapp.data.local.NewsDao
 import pro.mezentsev.newsapp.data.local.NewsDatabase
+import pro.mezentsev.newsapp.di.scope.ApplicationScope
 
 @Module
 class RepositoryModule {
 
     @Provides
+    @ApplicationScope
     fun provideNewsRepository(newsApi: NewsApi, newsDao: NewsDao): NewsRepository {
         return NewsRepositoryImpl(newsApi, newsDao)
     }
@@ -22,6 +24,7 @@ class RepositoryModule {
      * Provides database for [NewsDatabase].
      */
     @Provides
+    @ApplicationScope
     fun provideDatabase(context: Context): NewsDatabase {
         return Room.databaseBuilder(
                 context,
@@ -31,6 +34,7 @@ class RepositoryModule {
     }
 
     @Provides
+    @ApplicationScope
     fun provideNewsDao(db: NewsDatabase): NewsDao {
         return db.newsDao()
     }

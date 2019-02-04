@@ -5,7 +5,6 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
 
 /**
  * Provides model for [source](https://newsapi.org/docs/endpoints/sources).
@@ -50,18 +49,5 @@ data class Source(@PrimaryKey @ColumnInfo(name = "id") val id: String,
         override fun newArray(size: Int): Array<Source?> {
             return arrayOfNulls(size)
         }
-    }
-}
-
-
-class SourceConverter {
-    companion object {
-        @JvmStatic
-        @TypeConverter
-        fun fromSource(source: Source) = source.id
-
-        @JvmStatic
-        @TypeConverter
-        fun toSource(sourceId: String = "") = Source(sourceId, "")
     }
 }

@@ -3,11 +3,11 @@ package pro.mezentsev.newsapp.di.module
 import android.app.Application
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
+import pro.mezentsev.newsapp.di.scope.ApplicationScope
 
 @Module
 class AppModule(private val application: Application) {
     @Provides
-    @Singleton
+    @ApplicationScope
     fun provideApplication(): Application = application
 }
