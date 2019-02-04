@@ -2,10 +2,11 @@ package pro.mezentsev.newsapp.ui
 
 import androidx.annotation.IdRes
 import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import dagger.android.support.DaggerAppCompatActivity
 
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : DaggerAppCompatActivity(), Contract.BaseView {
+
     fun setupActionBar(@IdRes toolbarId: Int, action: ActionBar.() -> Unit) {
         setSupportActionBar(findViewById(toolbarId))
         supportActionBar?.run {

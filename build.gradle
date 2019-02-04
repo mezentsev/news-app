@@ -28,7 +28,8 @@ buildscript {
         retrofitVersion = '2.3.0'
         rxjavaVersion = '2.1.8'
         rxandroidVersion = '2.0.2'
-        daggerVersion = '2.14.1'
+
+        daggerVersion = '2.15'
 
         junitVersion = '4.12'
         testRunnerVersion = '1.1.1'

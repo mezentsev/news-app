@@ -2,10 +2,14 @@ package pro.mezentsev.newsapp.sources
 
 import android.os.Bundle
 import pro.mezentsev.newsapp.R
-import pro.mezentsev.newsapp.data.NewsRepositoryImpl
+import pro.mezentsev.newsapp.data.NewsRepository
 import pro.mezentsev.newsapp.ui.BaseActivity
+import javax.inject.Inject
 
 class SourcesActivity : BaseActivity() {
+    @Inject
+    lateinit var newsRepository: NewsRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_with_toolbar)
@@ -14,8 +18,7 @@ class SourcesActivity : BaseActivity() {
             setTitle(R.string.sources_activity_title)
         }
 
-        //todo inject
-        val sourcePresenter = SourcesPresenter(NewsRepositoryImpl(this))
+        val sourcePresenter = SourcesPresenter(newsRepository)
         val frameId = R.id.frame
         (supportFragmentManager.findFragmentById(frameId) as SourcesFragment?)?.apply { presenter = sourcePresenter }
                 ?: SourcesFragment.newInstance().apply {

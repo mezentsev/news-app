@@ -1,21 +1,17 @@
 package pro.mezentsev.newsapp.data
 
-import android.content.Context
 import android.util.Log
 import androidx.annotation.IntRange
 import io.reactivex.Single
-import pro.mezentsev.newsapp.data.api.NewsApiOrg
+import pro.mezentsev.newsapp.data.api.NewsApi
 import pro.mezentsev.newsapp.data.local.NewsDao
-import pro.mezentsev.newsapp.data.local.NewsDatabase
 import pro.mezentsev.newsapp.model.Article
 import pro.mezentsev.newsapp.model.Source
 import pro.mezentsev.newsapp.model.SourceConverter
 import java.util.concurrent.TimeUnit
 
-class NewsRepositoryImpl constructor(
-        private val context: Context,
-        private val newsApi: NewsApiOrg = NewsApiOrg.create(),
-        private val newsDao: NewsDao = NewsDatabase.getInstance(context).newsDao()) : NewsRepository {
+class NewsRepositoryImpl constructor(private val newsApi: NewsApi,
+                                     private val newsDao: NewsDao) : NewsRepository {
 
     override fun loadSources(): Single<List<Source>> {
         return newsApi.getSources()
