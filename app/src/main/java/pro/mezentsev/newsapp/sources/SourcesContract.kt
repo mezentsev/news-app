@@ -12,7 +12,7 @@ interface SourcesContract {
     }
 
     abstract class Presenter : Contract.BasePresenter<View>() {
-        abstract fun load()
+        abstract fun load(force: Boolean)
         abstract fun onSourceObtained(source: Source)
     }
 }

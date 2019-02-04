@@ -19,6 +19,8 @@ class SourcesAdapter : RecyclerView.Adapter<SourcesAdapter.SourceHolder>(), OnSo
         notifyDataSetChanged()
     }
 
+    fun getSources() = sources
+
     fun setSourceClickListener(listener: SourceClickListener?) {
         sourceClickListener = listener
     }

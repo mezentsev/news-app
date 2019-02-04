@@ -12,6 +12,9 @@ interface ArticlesContract {
     }
 
     abstract class Presenter : Contract.BasePresenter<View>() {
-        abstract fun load(@IntRange(from = 0) count: Int = 30, from: Int = 0, sourceId: String)
+        abstract fun load(@IntRange(from = 0) count: Int = 30,
+                          from: Int = 0,
+                          sourceId: String,
+                          force: Boolean)
     }
 }

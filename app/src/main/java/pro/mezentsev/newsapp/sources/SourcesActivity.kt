@@ -14,13 +14,13 @@ class SourcesActivity : BaseActivity() {
             setTitle(R.string.sources_activity_title)
         }
 
+        //todo inject
+        val sourcePresenter = SourcesPresenter(NewsRepositoryImpl(this))
         val frameId = R.id.frame
-        val sourcesFragment = supportFragmentManager.findFragmentById(frameId) as SourcesFragment?
+        (supportFragmentManager.findFragmentById(frameId) as SourcesFragment?)?.apply { presenter = sourcePresenter }
                 ?: SourcesFragment.newInstance().apply {
+                    presenter = sourcePresenter
                     replaceFragment(frameId, this)
                 }
-
-        //todo inject
-        sourcesFragment.presenter = SourcesPresenter(NewsRepositoryImpl(this))
     }
 }

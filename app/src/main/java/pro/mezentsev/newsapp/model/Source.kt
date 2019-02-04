@@ -1,5 +1,7 @@
 package pro.mezentsev.newsapp.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -12,7 +14,42 @@ data class Source(@PrimaryKey @ColumnInfo(name = "id") val id: String,
                   @ColumnInfo(name = "url") val url: String? = null,
                   @ColumnInfo(name = "category") val category: String? = null,
                   @ColumnInfo(name = "language") val language: String? = null,
-                  @ColumnInfo(name = "country") val country: String? = null)
+                  @ColumnInfo(name = "country") val country: String? = null) : Parcelable {
+
+    constructor(parcel: Parcel) : this(
+            parcel.readString() ?: "",
+            parcel.readString() ?: "",
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString())
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(id)
+        parcel.writeString(name)
+        parcel.writeString(description)
+        parcel.writeString(url)
+        parcel.writeString(category)
+        parcel.writeString(language)
+        parcel.writeString(country)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Source> {
+        override fun createFromParcel(parcel: Parcel): Source {
+            return Source(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Source?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
+
 
 class SourceConverter {
     companion object {
@@ -22,6 +59,6 @@ class SourceConverter {
 
         @JvmStatic
         @TypeConverter
-        fun toSource(sourceId: String) = Source(sourceId, "")
+        fun toSource(sourceId: String = "") = Source(sourceId, "")
     }
 }

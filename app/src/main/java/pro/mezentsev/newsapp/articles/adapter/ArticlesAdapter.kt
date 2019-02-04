@@ -20,6 +20,8 @@ class ArticlesAdapter constructor(private val context: Context) : RecyclerView.A
         notifyDataSetChanged()
     }
 
+    fun getArticles() = articles.toList()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleHolder {
         return ArticleHolder(
                 LayoutInflater

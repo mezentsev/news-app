@@ -10,17 +10,20 @@ import pro.mezentsev.newsapp.model.Source
 class SourcesPresenter constructor(private val newsRepository: NewsRepository): SourcesContract.Presenter() {
     private val subscriptions = CompositeDisposable()
 
-    override fun load() {
-        Log.d(TAG, "Start loading")
-        view?.showProgress()
-
+    override fun load(force: Boolean) {
         subscriptions.clear()
+
+        if (!force) {
+            return
+        }
+
+        view?.showProgress()
 
         val subscribe = newsRepository.loadSources()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ sources: List<Source> ->
-                    view?.showSources(sources)
+                    view?.showSources(sources) ?: Log.e(TAG, "No view attached")
                 }, { error ->
                     Log.e(TAG, "Can't get sources", error)
                     view?.showError()

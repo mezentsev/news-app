@@ -17,15 +17,14 @@ class ArticlesActivity : BaseActivity() {
 
         val sourceId: String? = intent.getStringExtra(EXTRA_SOURCE_ID)
 
-        val frameId = R.id.frame
-        val articlesFragment = supportFragmentManager.findFragmentById(frameId) as ArticlesFragment?
-                ?: ArticlesFragment.newInstance(sourceId)
-                        .apply {
-                            replaceFragment(frameId, this)
-                        }
-
         //todo inject
-        articlesFragment.presenter = ArticlesPresenter(NewsRepositoryImpl(this))
+        val articlesPresenter = ArticlesPresenter(NewsRepositoryImpl(this))
+        val frameId = R.id.frame
+        (supportFragmentManager.findFragmentById(frameId) as ArticlesFragment?)?.apply { presenter = articlesPresenter }
+                ?: ArticlesFragment.newInstance(sourceId).apply {
+                    presenter = articlesPresenter
+                    replaceFragment(frameId, this)
+                }
     }
 
     companion object {

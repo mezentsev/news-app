@@ -10,10 +10,14 @@ import pro.mezentsev.newsapp.model.Article
 class ArticlesPresenter constructor(private val newsRepository: NewsRepository) : ArticlesContract.Presenter() {
     private val subscriptions = CompositeDisposable()
 
-    override fun load(count: Int, from: Int, sourceId: String) {
-        view?.showProgress()
-
+    override fun load(count: Int, from: Int, sourceId: String, force: Boolean) {
         subscriptions.clear()
+
+        if (!force) {
+            return
+        }
+
+        view?.showProgress()
 
         val subscribe = newsRepository.loadArticles(count, from, sourceId)
                 .map {

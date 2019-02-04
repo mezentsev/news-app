@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "pro.mezentsev.newsapp"
 
-        minSdkVersion rootProject.compileSdkVersion
+        minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
         versionCode 1

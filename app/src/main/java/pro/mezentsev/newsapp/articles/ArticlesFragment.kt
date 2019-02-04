@@ -21,6 +21,7 @@ import pro.mezentsev.newsapp.ui.BaseFragment
 
 class ArticlesFragment : BaseFragment<ArticlesContract.Presenter>(), ArticlesContract.View {
     private lateinit var articlesAdapter: ArticlesAdapter
+    private var forceLoad: Boolean = true
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -42,14 +43,20 @@ class ArticlesFragment : BaseFragment<ArticlesContract.Presenter>(), ArticlesCon
             addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
         }
 
-        arguments
+        savedInstanceState?.let {
+            val list = it.getParcelableArrayList<Article>(BUNDLE_ARRAY_KEY)
+            if (!list.isNullOrEmpty()) {
+                showArticles(list, 0)
+                forceLoad = false
+            }
+        }
 
         return view
     }
 
-    override fun onStart() {
-        super.onStart()
-        load()
+    override fun onResume() {
+        super.onResume()
+        load(forceLoad)
     }
 
     override fun showArticles(articles: List<Article>, from: Int) {
@@ -83,24 +90,31 @@ class ArticlesFragment : BaseFragment<ArticlesContract.Presenter>(), ArticlesCon
         view?.let {
             Snackbar
                     .make(it, R.string.error_loading_articles, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.error_loading_reload_action) { load() }
+                    .setAction(R.string.error_loading_reload_action) { load(true) }
                     .show()
         }
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelableArrayList(BUNDLE_ARRAY_KEY, ArrayList(articlesAdapter.getArticles()))
+    }
+
 
     override fun onDestroyView() {
         presenter.detach()
         super.onDestroyView()
     }
 
-    private fun load() {
+    private fun load(force: Boolean) {
         arguments?.getString(EXTRA_SOURCE_ID)?.let {
-            presenter.load(sourceId = it)
+            presenter.load(sourceId = it, force = force)
         } ?: Log.d(TAG, "Can't get source id")
     }
 
     companion object {
         private const val TAG = "ArticlesFragment"
+        private const val BUNDLE_ARRAY_KEY = "ARRAY_KEY"
 
         @JvmStatic
         fun newInstance(sourceId: String?) =
