@@ -23,9 +23,8 @@ class SourcesPresenter constructor(private val newsRepository: NewsRepository): 
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ sources: List<Source> ->
-                    view?.showSources(sources) ?: Log.e(TAG, "No view attached")
-                }, { error ->
-                    Log.e(TAG, "Can't get sources", error)
+                    view?.showSources(sources)
+                }, {
                     view?.showError()
                 })
 

@@ -1,6 +1,5 @@
 package pro.mezentsev.newsapp.articles
 
-import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -29,8 +28,7 @@ class ArticlesPresenter constructor(private val newsRepository: NewsRepository) 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ articles: List<Article> ->
                     view?.showArticles(articles)
-                }, { ex ->
-                    Log.e(TAG, "Can't get articles", ex)
+                }, {
                     view?.showError()
                 })
 

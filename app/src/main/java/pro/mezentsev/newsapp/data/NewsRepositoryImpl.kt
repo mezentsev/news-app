@@ -1,6 +1,5 @@
 package pro.mezentsev.newsapp.data
 
-import android.util.Log
 import androidx.annotation.IntRange
 import io.reactivex.Single
 import pro.mezentsev.newsapp.data.api.NewsApi
@@ -20,8 +19,7 @@ class NewsRepositoryImpl constructor(private val newsApi: NewsApi,
                 .flatMapIterable { it.sources }
                 .toList()
                 .doAfterSuccess { newsDao.insertSources(it) }
-                .onErrorResumeNext { ex ->
-                    Log.d(TAG, "Problem with api. Trying to load from dao", ex)
+                .onErrorResumeNext {
                     newsDao.getSources()
                             .filter { !it.isEmpty() }
                             .toSingle()
@@ -40,15 +38,10 @@ class NewsRepositoryImpl constructor(private val newsApi: NewsApi,
                     newsDao.removeArticles(it[0].source)
                     newsDao.insertArticles(it)
                 }
-                .onErrorResumeNext { ex ->
-                    Log.d(TAG, "Problem with api. Trying to load from dao", ex)
+                .onErrorResumeNext {
                     newsDao.getArticles(SourceConverter.toSource(sourceId), count, page )
                             .filter { !it.isEmpty() }
                             .toSingle()
                 }
-    }
-
-    companion object {
-        const val TAG = "NewsRepositoryImpl"
     }
 }
