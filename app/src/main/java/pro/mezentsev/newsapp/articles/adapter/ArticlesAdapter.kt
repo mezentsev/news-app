@@ -35,15 +35,7 @@ class ArticlesAdapter constructor(private val context: Context) : RecyclerView.A
 
     override fun onBindViewHolder(holder: ArticleHolder, position: Int) {
         holder.bind(articles[position])
-
-        Glide.with(context)
-                .load(articles[position].urlToImage)
-                .apply(RequestOptions()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .centerCrop())
-                .into(holder.thumbnailImageView)
     }
-
 
     inner class ArticleHolder constructor(view: View) : RecyclerView.ViewHolder(view) {
         val titleTextView = view.title_view
@@ -57,6 +49,17 @@ class ArticlesAdapter constructor(private val context: Context) : RecyclerView.A
             descriptionTextView?.text = article.description
             authorTextView?.text = article.author
             dateTextView?.text = article.getDate()
+
+            article.urlToImage?.let {
+                Glide.with(context)
+                        .load(it)
+                        .apply(RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .centerCrop())
+                        .into(thumbnailImageView)
+            } ?: Glide.with(context)
+                    .clear(thumbnailImageView)
+
         }
     }
 }
