@@ -5,11 +5,9 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
-
 /**
  * Provides model for [article](https://newsapi.org/docs/endpoints/sources).
  */
@@ -34,8 +32,8 @@ data class Article(@ColumnInfo(name = "source") val source: Source,
             parcel.readString())
 
     fun getDate(): String = try {
-        LocalDateTime
-                .ofInstant(Instant.parse(publishedAt), ZoneId.systemDefault())
+        ZonedDateTime.parse(publishedAt)
+                .withZoneSameInstant(ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy"))
     } catch (ex: Exception) {
         publishedAt
