@@ -56,7 +56,7 @@ class ArticlesAdapter constructor(private val context: Context) : RecyclerView.A
             titleTextView?.text = article.title
             descriptionTextView?.text = article.description
             authorTextView?.text = article.author
-            dateTextView?.text = article.publishedAt
+            dateTextView?.text = article.getDate()
         }
     }
 }

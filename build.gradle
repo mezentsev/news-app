@@ -22,6 +22,7 @@ buildscript {
         recyclerViewVersion = '1.0.0'
         appcompatVersion = '1.0.2'
         roomVersion = '2.0.0'
+        threetenVersion = '1.1.1'
 
         glideVersion = '4.8.0'
         gsonVersion = '2.8.2'
