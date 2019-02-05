@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.article_view.view.*
 import pro.mezentsev.newsapp.R
@@ -38,7 +39,8 @@ class ArticlesAdapter constructor(private val context: Context) : RecyclerView.A
         Glide.with(context)
                 .load(articles[position].urlToImage)
                 .apply(RequestOptions()
-                        .override(300))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .centerCrop())
                 .into(holder.thumbnailImageView)
     }
 
