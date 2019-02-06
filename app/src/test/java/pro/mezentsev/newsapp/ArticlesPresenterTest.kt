@@ -32,11 +32,11 @@ class ArticlesPresenterTest {
     @Test
     fun `do not load articles without force`() {
         val view = mock<ArticlesContract.View>()
-        val count = 30
+        val count = 10
         val sourceId = "1"
         underTest.attach(view)
 
-        underTest.load(count, sourceId, false)
+        underTest.load(sourceId, false)
 
         verify(newsRepository, never()).loadArticles(eq(sourceId), eq(count), eq(0))
     }
@@ -44,7 +44,6 @@ class ArticlesPresenterTest {
     @Test
     fun `fire showArticles for view after success load`() {
         val view = mock<ArticlesContract.View>()
-        val count = 30
         val sourceId = "1"
         val source = SourceConverter.toSource(sourceId)
         val articles = listOf(
@@ -59,7 +58,7 @@ class ArticlesPresenterTest {
         whenever(newsRepository.loadArticles(any(), any(), any())).thenReturn(singleArticles)
         singleArticles.blockingGet()
 
-        underTest.load(count, sourceId, true)
+        underTest.load(sourceId, true)
 
         verify(view).showProgress()
         verify(view, never()).showError()
@@ -69,7 +68,6 @@ class ArticlesPresenterTest {
     @Test
     fun `fire showArticles for view after success load filtered empty title`() {
         val view = mock<ArticlesContract.View>()
-        val count = 30
         val sourceId = "1"
         val source = SourceConverter.toSource(sourceId)
         val articles = listOf(
@@ -82,7 +80,7 @@ class ArticlesPresenterTest {
 
         whenever(newsRepository.loadArticles(any(), any(), any())).thenReturn(singleArticles)
 
-        underTest.load(count, sourceId, true)
+        underTest.load(sourceId, true)
         singleArticles.blockingGet()
 
         verify(view).showProgress()
@@ -93,7 +91,6 @@ class ArticlesPresenterTest {
     @Test
     fun `fire showError for view on error in repository`() {
         val view = mock<ArticlesContract.View>()
-        val count = 30
         val sourceId = "1"
         val singleArticles = Single.error<List<Article>> { Exception() }
 
@@ -107,10 +104,50 @@ class ArticlesPresenterTest {
         } catch (e: Exception) {
         }
 
-        underTest.load(count, sourceId, true)
+        underTest.load(sourceId, true)
 
         verify(view).showProgress()
         verify(view).showError()
         verify(view, never()).showArticles(any())
+    }
+
+    @Test
+    fun `test page offset 30`() {
+        testPageOffset(4, 30)
+    }
+
+
+    @Test
+    fun `test page offset 100`() {
+        testPageOffset(11, 100)
+    }
+
+    @Test
+    fun `test page offset 0`() {
+        testPageOffset(1, 0)
+    }
+
+    @Test
+    fun `test page offset -10`() {
+        testPageOffset(1, -10)
+    }
+
+    private fun testPageOffset(expectedPage: Int, actualOffset: Int) {
+        val view = mock<ArticlesContract.View>()
+        val sourceId = "1"
+        val source = SourceConverter.toSource(sourceId)
+        val articles = listOf(
+                Article(source, null, "1", null, null, null, "", null)
+        )
+        val singleArticles = Single.just(articles)
+
+        underTest.attach(view)
+
+        whenever(newsRepository.loadArticles(any(), any(), any())).thenReturn(singleArticles)
+
+        underTest.setOffset(actualOffset)
+        underTest.load(sourceId, true)
+        singleArticles.blockingGet()
+        verify(newsRepository).loadArticles(eq(sourceId), eq(10), eq(expectedPage))
     }
 }

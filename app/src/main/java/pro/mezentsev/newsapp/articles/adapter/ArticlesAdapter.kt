@@ -15,13 +15,17 @@ import pro.mezentsev.newsapp.model.Article
 class ArticlesAdapter constructor(private val context: Context) : RecyclerView.Adapter<ArticlesAdapter.ArticleHolder>() {
     private val articles = mutableListOf<Article>()
 
-    fun setArticles(articlesList: List<Article>) {
-        articles.clear()
-        articles.addAll(articlesList)
-        notifyDataSetChanged()
-    }
-
     fun getArticles() = articles.toList()
+
+    fun addArticles(articlesList: List<Article>) {
+        if (articlesList.isNullOrEmpty()) {
+            return
+        }
+
+        val previousCount = articles.size
+        articles.addAll(articlesList)
+        notifyItemRangeInserted(previousCount, articlesList.size)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleHolder {
         return ArticleHolder(

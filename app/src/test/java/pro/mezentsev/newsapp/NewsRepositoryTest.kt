@@ -24,7 +24,8 @@ class NewsRepositoryTest {
         val sourceId = "1"
         val source = SourceConverter.toSource(sourceId)
         val count = 30
-        val offset = 0
+        val page = 0
+        val expectedPage = 1
 
         val articlesFromApi = listOf(
                 Article(source, null, "", null, null, null, "", null),
@@ -34,16 +35,16 @@ class NewsRepositoryTest {
 
         whenever(newsApi.getArticles(any(), any(), any())).thenReturn(Single.just(articlesResponse))
 
-        val articles = underTest.loadArticles(sourceId, count, offset).blockingGet()
+        val articles = underTest.loadArticles(sourceId, count, page).blockingGet()
 
         assertEquals(articlesFromApi.size, articles.size)
         for ((i, a) in articles.withIndex()) {
             assertEquals(articlesFromApi[i], a)
         }
 
-        verify(newsApi).getArticles(eq(sourceId), eq(count), eq(offset))
+        verify(newsApi).getArticles(eq(sourceId), eq(count), eq(expectedPage))
         verify(newsDao).insertArticles(eq(articlesFromApi))
-        verify(newsDao, never()).getArticles(eq(source), eq(count), eq(offset))
+        verify(newsDao, never()).getArticles(eq(source), eq(count), eq(page))
     }
 
     @Test
@@ -51,19 +52,20 @@ class NewsRepositoryTest {
         val sourceId = "1"
         val source = SourceConverter.toSource(sourceId)
         val count = 30
-        val offset = 0
+        val page = 0
+        val expectedPage = 1
 
         whenever(newsApi.getArticles(any(), any(), any())).thenReturn(Single.error { Exception() })
 
         try {
-            underTest.loadArticles(sourceId, count, offset).blockingGet()
+            underTest.loadArticles(sourceId, count, page).blockingGet()
             fail()
         } catch (e: Exception) {
         }
 
-        verify(newsApi).getArticles(eq(sourceId), eq(count), eq(offset))
+        verify(newsApi).getArticles(eq(sourceId), eq(count), eq(expectedPage))
         verify(newsDao, never()).insertArticles(any())
-        verify(newsDao).getArticles(eq(source), eq(count), eq(offset))
+        verify(newsDao).getArticles(eq(source), eq(count), eq(page))
     }
 
     @Test

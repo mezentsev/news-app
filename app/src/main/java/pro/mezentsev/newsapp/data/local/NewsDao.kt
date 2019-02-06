@@ -21,9 +21,9 @@ interface NewsDao {
     fun getSources(): Single<List<Source>>
 
     /**
-     * Adds list of [Article] or ignore on duplicate.
+     * Adds list of [Article] or replace on duplicate.
      */
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertArticles(articles: List<Article>)
 
     /**
@@ -33,10 +33,10 @@ interface NewsDao {
     fun removeArticles(source: Source)
 
     /**
-     * Gets [count] of [Article] by [source] with [offset] from the first one.
+     * Gets [count] of [Article] by [source] with [page] from the first one.
      */
-    @Query("SELECT * FROM article WHERE source = :source LIMIT :count OFFSET :offset")
+    @Query("SELECT * FROM article WHERE source = :source ORDER BY publishedAt DESC LIMIT :count OFFSET :page")
     fun getArticles(source: Source,
                     @IntRange(from = 0) count: Int,
-                    @IntRange(from = 0) offset: Int): Single<List<Article>>
+                    @IntRange(from = 0) page: Int): Single<List<Article>>
 }

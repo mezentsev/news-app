@@ -12,7 +12,6 @@ import pro.mezentsev.newsapp.model.Source
 import pro.mezentsev.newsapp.model.SourceConverter
 import pro.mezentsev.newsapp.sources.SourcesContract
 import pro.mezentsev.newsapp.sources.SourcesPresenter
-import java.util.concurrent.TimeUnit
 import kotlin.test.fail
 
 
@@ -47,7 +46,7 @@ class SourcesPresenterTest {
                 SourceConverter.toSource("1"),
                 SourceConverter.toSource("2")
         )
-        val singleSources = Single.just(sources).delay(300, TimeUnit.MILLISECONDS)
+        val singleSources = Single.just(sources)
 
         underTest.attach(view)
 

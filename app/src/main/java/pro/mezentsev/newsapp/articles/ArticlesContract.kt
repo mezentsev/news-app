@@ -8,7 +8,7 @@ import pro.mezentsev.newsapp.ui.Contract
 interface ArticlesContract {
     interface View : Contract.BaseView {
         /**
-         * Displays [articles] in View.
+         * Displays all [articles] in View.
          */
         fun showArticles(articles: List<Article>)
 
@@ -26,12 +26,15 @@ interface ArticlesContract {
     abstract class Presenter : Contract.BasePresenter<View>() {
         /**
          * Loads list of [Article].
-         * @param count     maximum count of loaded articles
          * @param sourceId  ID of [Source]
          * @param force     force reload articles
          */
-        abstract fun load(@IntRange(from = 0) count: Int = 30,
-                          sourceId: String,
+        abstract fun load(sourceId: String,
                           force: Boolean)
+
+        /**
+         * Skips [offset] count of [Article].
+         */
+        abstract fun setOffset(@IntRange(from = 0) offset: Int)
     }
 }

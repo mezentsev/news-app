@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_list.view.*
 
@@ -21,6 +22,7 @@ import pro.mezentsev.newsapp.ui.BaseFragment
 
 class ArticlesFragment : BaseFragment<ArticlesContract.Presenter>(), ArticlesContract.View {
     private lateinit var articlesAdapter: ArticlesAdapter
+    private lateinit var articlesLayoutManager: LinearLayoutManager
     private var forceLoad: Boolean = true
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -28,19 +30,38 @@ class ArticlesFragment : BaseFragment<ArticlesContract.Presenter>(), ArticlesCon
                               savedInstanceState: Bundle?): View? {
         presenter.attach(this)
 
-        val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         val view = inflater.inflate(R.layout.fragment_list, container, false)
+        val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
         articlesAdapter = ArticlesAdapter(view.context)
+        articlesLayoutManager = if (isLandscape) {
+            GridLayoutManager(context, 2)
+        } else {
+            LinearLayoutManager(context)
+        }
+
         view.list.apply {
             adapter = articlesAdapter
+            layoutManager = articlesLayoutManager
             if (isLandscape) {
-                layoutManager = GridLayoutManager(context, 2)
                 addItemDecoration(DividerItemDecoration(context, LinearLayout.HORIZONTAL))
-            } else {
-                layoutManager = LinearLayoutManager(context)
             }
+
             addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    val totalItemCount = articlesLayoutManager.itemCount
+                    val visibleItemCount = articlesLayoutManager.childCount
+                    val firstVisibleItemPosition = articlesLayoutManager.findFirstVisibleItemPosition()
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                            && firstVisibleItemPosition >= 0) {
+                        load(true)
+                    }
+                }
+            })
         }
 
         savedInstanceState?.let {
@@ -56,21 +77,18 @@ class ArticlesFragment : BaseFragment<ArticlesContract.Presenter>(), ArticlesCon
 
     override fun onResume() {
         super.onResume()
+        presenter.setOffset(articlesAdapter.itemCount)
         load(forceLoad)
     }
 
     override fun showArticles(articles: List<Article>) {
-        hideProgress()
-        articlesAdapter.setArticles(articles)
-
-        view?.let {
-            if (articles.isEmpty()) {
-                Snackbar
-                        .make(it, R.string.error_no_articles_found, Snackbar.LENGTH_INDEFINITE)
-                        .setAction(R.string.error_no_articles_found_back_text) { activity?.onBackPressed() }
-                        .show()
-            }
+        if (articlesAdapter.itemCount == 0 && articles.isEmpty()) {
+            showError()
+            return
         }
+
+        hideProgress()
+        articlesAdapter.addArticles(articles)
     }
 
     override fun showProgress() {

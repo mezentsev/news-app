@@ -12,7 +12,7 @@ interface NewsRepository {
      */
     fun loadArticles(sourceId: String,
                      @IntRange(from = 0) count: Int,
-                     @IntRange(from = 0) page: Int = 0): Single<List<Article>>
+                     @IntRange(from = 0) page: Int): Single<List<Article>>
 
     /**
      * Loads list of [Source] from repository. Emits [Single].

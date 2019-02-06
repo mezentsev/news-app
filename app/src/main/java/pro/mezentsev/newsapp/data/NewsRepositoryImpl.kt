@@ -29,19 +29,19 @@ class NewsRepositoryImpl constructor(private val newsApi: NewsApi,
     override fun loadArticles(sourceId: String,
                               @IntRange(from = 0) count: Int,
                               @IntRange(from = 0) page: Int): Single<List<Article>> {
-        return newsApi.getArticles(sourceId, count, page)
+        val actualPage = maxOf(1, page)
+        return newsApi.getArticles(sourceId, count, actualPage)
                 .timeout(3, TimeUnit.SECONDS)
                 .toObservable()
                 .flatMapIterable { it.articles }
                 .toList()
                 .doAfterSuccess {
-                    newsDao.removeArticles(it[0].source)
-                    newsDao.insertArticles(it)
+                    if (it.isNotEmpty()) {
+                        newsDao.insertArticles(it)
+                    }
                 }
                 .onErrorResumeNext {
-                    newsDao.getArticles(SourceConverter.toSource(sourceId), count, page )
-                            .filter { !it.isEmpty() }
-                            .toSingle()
+                    newsDao.getArticles(SourceConverter.toSource(sourceId), count, count * (actualPage - 1))
                 }
     }
 }

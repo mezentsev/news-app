@@ -12,10 +12,10 @@ interface NewsApi {
      * @param count     maximum count of loaded articles
      * @param page      articles page
      */
-    @GET("top-headlines")
+    @GET("everything")
     fun getArticles(@Query("sources") sourceId: String,
-                    @Query("pageSize") count: Int = 30,
-                    @Query("page") page: Int = 0): Single<ArticlesResponse>
+                    @Query("pageSize") count: Int,
+                    @Query("page") page: Int): Single<ArticlesResponse>
 
     /**
      * Gets list of [Source] from [sources](https://newsapi.org/docs/endpoints/sources).
