@@ -4,8 +4,9 @@ import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Single
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import pro.mezentsev.newsapp.data.NewsRepository
+import pro.mezentsev.newsapp.data.ArticlesNewsRepository
 import pro.mezentsev.newsapp.data.NewsRepositoryImpl
+import pro.mezentsev.newsapp.data.SourcesNewsRepository
 import pro.mezentsev.newsapp.data.api.ArticlesResponse
 import pro.mezentsev.newsapp.data.api.NewsApi
 import pro.mezentsev.newsapp.data.local.NewsDao
@@ -17,7 +18,10 @@ class NewsRepositoryTest {
     private val newsApi = mock<NewsApi>()
     private val newsDao = mock<NewsDao>()
 
-    private val underTest: NewsRepository = NewsRepositoryImpl(newsApi, newsDao)
+    private val articlesRepositoryUnderTest: ArticlesNewsRepository =
+        NewsRepositoryImpl(newsApi, newsDao)
+    private val sourcesRepositoryUnderTest: SourcesNewsRepository =
+        NewsRepositoryImpl(newsApi, newsDao)
 
     @Test
     fun `load articles only from api and save it to dao`() {
@@ -35,7 +39,7 @@ class NewsRepositoryTest {
 
         whenever(newsApi.getArticles(any(), any(), any())).thenReturn(Single.just(articlesResponse))
 
-        val articles = underTest.loadArticles(sourceId, count, page).blockingGet()
+        val articles = articlesRepositoryUnderTest.loadArticles(sourceId, count, page).blockingGet()
 
         assertEquals(articlesFromApi.size, articles.size)
         for ((i, a) in articles.withIndex()) {
@@ -58,7 +62,7 @@ class NewsRepositoryTest {
         whenever(newsApi.getArticles(any(), any(), any())).thenReturn(Single.error { Exception() })
 
         try {
-            underTest.loadArticles(sourceId, count, page).blockingGet()
+            articlesRepositoryUnderTest.loadArticles(sourceId, count, page).blockingGet()
             fail()
         } catch (e: Exception) {
         }
@@ -73,7 +77,7 @@ class NewsRepositoryTest {
         whenever(newsApi.getSources()).thenReturn(Single.error { Exception() })
 
         try {
-            underTest.loadSources().blockingGet()
+            sourcesRepositoryUnderTest.loadSources().blockingGet()
             fail()
         } catch (e: Exception) {
         }

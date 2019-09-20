@@ -2,13 +2,12 @@ package pro.mezentsev.newsapp.articles
 
 import android.os.Bundle
 import pro.mezentsev.newsapp.R
-import pro.mezentsev.newsapp.data.NewsRepository
 import pro.mezentsev.newsapp.ui.BaseActivity
 import javax.inject.Inject
 
 class ArticlesActivity : BaseActivity() {
     @Inject
-    lateinit var newsRepository: NewsRepository
+    lateinit var articlesPresenter: ArticlesPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +19,6 @@ class ArticlesActivity : BaseActivity() {
         }
 
         val sourceId: String? = intent.getStringExtra(EXTRA_SOURCE_ID)
-        val articlesPresenter = ArticlesPresenter(newsRepository)
         val frameId = R.id.frame
         (supportFragmentManager.findFragmentById(frameId) as ArticlesFragment?)?.apply { presenter = articlesPresenter }
                 ?: ArticlesFragment.newInstance(sourceId).apply {

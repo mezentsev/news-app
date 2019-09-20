@@ -7,7 +7,7 @@ import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import org.junit.BeforeClass
 import org.junit.Test
-import pro.mezentsev.newsapp.data.NewsRepository
+import pro.mezentsev.newsapp.data.SourcesNewsRepository
 import pro.mezentsev.newsapp.model.Source
 import pro.mezentsev.newsapp.model.SourceConverter
 import pro.mezentsev.newsapp.sources.SourcesContract
@@ -25,7 +25,7 @@ class SourcesPresenterTest {
         }
     }
 
-    private val newsRepository = mock<NewsRepository>()
+    private val newsRepository = mock<SourcesNewsRepository>()
 
     private val underTest: SourcesContract.Presenter = SourcesPresenter(newsRepository)
 

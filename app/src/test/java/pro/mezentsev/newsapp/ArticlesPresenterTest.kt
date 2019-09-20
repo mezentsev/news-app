@@ -9,7 +9,7 @@ import org.junit.BeforeClass
 import org.junit.Test
 import pro.mezentsev.newsapp.articles.ArticlesContract
 import pro.mezentsev.newsapp.articles.ArticlesPresenter
-import pro.mezentsev.newsapp.data.NewsRepository
+import pro.mezentsev.newsapp.data.ArticlesNewsRepository
 import pro.mezentsev.newsapp.model.Article
 import pro.mezentsev.newsapp.model.SourceConverter
 import kotlin.test.fail
@@ -25,7 +25,7 @@ class ArticlesPresenterTest {
         }
     }
 
-    private val newsRepository = mock<NewsRepository>()
+    private val newsRepository = mock<ArticlesNewsRepository>()
 
     private val underTest: ArticlesContract.Presenter = ArticlesPresenter(newsRepository)
 
