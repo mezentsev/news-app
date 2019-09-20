@@ -4,11 +4,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import pro.mezentsev.newsapp.data.NewsRepository
+import pro.mezentsev.newsapp.data.NewsRepositoryImpl
 import pro.mezentsev.newsapp.model.Article
+import javax.inject.Inject
 import kotlin.math.floor
 
-class ArticlesPresenter constructor(private val newsRepository: NewsRepository) : ArticlesContract.Presenter() {
+class ArticlesPresenter
+@Inject constructor(
+    private val newsRepository: NewsRepositoryImpl
+) : ArticlesContract.Presenter() {
     private lateinit var sourceId: String
     private var count: Int = 10
     private var page: Int = 1
@@ -30,13 +34,13 @@ class ArticlesPresenter constructor(private val newsRepository: NewsRepository) 
         view?.showProgress()
 
         subscriptions.add(
-                getSubscriber({ articles ->
-                    isLastPage = articles.size < count
-                    view?.showArticles(articles)
-                    page += 1
-                }, {
-                    view?.showError()
-                })
+            getSubscriber({ articles ->
+                isLastPage = articles.size < count
+                view?.showArticles(articles)
+                page += 1
+            }, {
+                view?.showError()
+            })
         )
     }
 
@@ -50,22 +54,25 @@ class ArticlesPresenter constructor(private val newsRepository: NewsRepository) 
         super.detach()
     }
 
-    private fun getSubscriber(onSuccess: (List<Article>) -> Unit, onError: (Throwable) -> Unit): Disposable {
+    private fun getSubscriber(
+        onSuccess: (List<Article>) -> Unit,
+        onError: (Throwable) -> Unit
+    ): Disposable {
         return newsRepository.loadArticles(sourceId, count, page)
-                .map {
-                    it.filter { article ->
-                        article.title.isNotEmpty()
-                    }
+            .map {
+                it.filter { article ->
+                    article.title.isNotEmpty()
                 }
-                .doFinally {
-                    isLoading = false
-                }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ articles: List<Article> ->
-                    onSuccess(articles)
-                }, {
-                    onError(it)
-                })
+            }
+            .doFinally {
+                isLoading = false
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ articles: List<Article> ->
+                onSuccess(articles)
+            }, {
+                onError(it)
+            })
     }
 }
