@@ -15,6 +15,7 @@ import pro.mezentsev.newsapp.di.scope.ApplicationScope
         ContextModule::class,
         ActivityBindingsModule::class,
         RetrofitModule::class,
+        RepositoryModule::class,
         DatabaseModule::class
     ]
 )

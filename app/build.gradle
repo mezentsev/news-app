@@ -73,5 +73,4 @@ dependencies {
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
-    testImplementation "org.mockito:mockito-inline:$mockitoInlineVersion"
 }

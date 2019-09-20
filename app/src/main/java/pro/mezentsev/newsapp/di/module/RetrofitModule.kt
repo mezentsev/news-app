@@ -27,31 +27,31 @@ class RetrofitModule {
      */
     @Provides
     @ApplicationScope
-    fun provideRetrofit(): Retrofit {
+    fun provideRetrofit(httpClient: OkHttpClient): Retrofit = retrofit2.Retrofit.Builder()
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .client(httpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .baseUrl(BASE_URL)
+        .build()
+
+
+    @Provides
+    @ApplicationScope
+    fun provideOkHttpClient(): OkHttpClient {
         val httpClient = OkHttpClient.Builder()
         httpClient.addInterceptor { chain ->
             val original = chain.request()
             val originalHttpUrl = original.url()
-
             val url = originalHttpUrl.newBuilder()
-                    .addQueryParameter("apiKey", BuildConfig.NEWSAPI_ORG_TOKEN)
-                    .build()
-
+                .addQueryParameter("apiKey", BuildConfig.NEWSAPI_ORG_TOKEN)
+                .build()
             val requestBuilder = original.newBuilder()
-                    .url(url)
-
+                .url(url)
             val request = requestBuilder.build()
-
             Log.d(TAG, request.url().toString())
             chain.proceed(request)
         }
-
-        return retrofit2.Retrofit.Builder()
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(httpClient.build())
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(BASE_URL)
-                .build()
+        return httpClient.build()
     }
 
     companion object {
