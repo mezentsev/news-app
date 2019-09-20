@@ -14,7 +14,7 @@ class NewsRepositoryImpl
 @Inject constructor(
     private val newsApi: NewsApi,
     private val newsDao: NewsDao
-) : NewsRepository {
+) : ArticlesNewsRepository, SourcesNewsRepository {
 
     override fun loadSources(): Single<List<Source>> {
         return newsApi.getSources()

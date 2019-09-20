@@ -4,13 +4,13 @@ import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import pro.mezentsev.newsapp.data.NewsRepository
+import pro.mezentsev.newsapp.data.SourcesNewsRepository
 import pro.mezentsev.newsapp.model.Source
 import javax.inject.Inject
 
 class SourcesPresenter
 @Inject constructor(
-    private val newsRepository: NewsRepository
+    private val newsRepository: SourcesNewsRepository
 ) : SourcesContract.Presenter() {
     private val subscriptions = CompositeDisposable()
 

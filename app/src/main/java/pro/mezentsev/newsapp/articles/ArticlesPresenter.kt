@@ -4,14 +4,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import pro.mezentsev.newsapp.data.NewsRepository
+import pro.mezentsev.newsapp.data.ArticlesNewsRepository
 import pro.mezentsev.newsapp.model.Article
 import javax.inject.Inject
 import kotlin.math.floor
 
 class ArticlesPresenter
 @Inject constructor(
-    private val newsRepository: NewsRepository
+    private val newsRepository: ArticlesNewsRepository
 ) : ArticlesContract.Presenter() {
     private lateinit var sourceId: String
     private var count: Int = 10

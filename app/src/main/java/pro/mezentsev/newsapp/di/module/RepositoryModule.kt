@@ -2,8 +2,9 @@ package pro.mezentsev.newsapp.di.module
 
 import dagger.Module
 import dagger.Provides
-import pro.mezentsev.newsapp.data.NewsRepository
+import pro.mezentsev.newsapp.data.ArticlesNewsRepository
 import pro.mezentsev.newsapp.data.NewsRepositoryImpl
+import pro.mezentsev.newsapp.data.SourcesNewsRepository
 import pro.mezentsev.newsapp.data.api.NewsApi
 import pro.mezentsev.newsapp.data.local.NewsDao
 import pro.mezentsev.newsapp.di.scope.ApplicationScope
@@ -13,7 +14,19 @@ class RepositoryModule {
 
     @Provides
     @ApplicationScope
-    fun provideNewsRepository(newsApi: NewsApi, newsDao: NewsDao): NewsRepository {
+    fun provideSourcesNewsRepository(
+        newsApi: NewsApi,
+        newsDao: NewsDao
+    ): SourcesNewsRepository {
+        return NewsRepositoryImpl(newsApi, newsDao)
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideArticlesNewsRepository(
+        newsApi: NewsApi,
+        newsDao: NewsDao
+    ): ArticlesNewsRepository {
         return NewsRepositoryImpl(newsApi, newsDao)
     }
 
